@@ -34,7 +34,7 @@ export async function GET(req) {
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const order = searchParams.get("order") || "asc";
     
-    let data = await readTextFile("/public/data.csv");
+    let data = await readTextFile("/app/(data)/data.csv");
 
     if (sortBy === "createdAt") {
       data.sort((a, b) => {
