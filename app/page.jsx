@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Dropdown from './(components)/Dropdown';
-import Card from './(components)/Card';
+import Dropdown from './(components)/dropdown';
+import Card from './(components)/card';
 
 const Home = () => {
   const [data, setData] = useState([]);
