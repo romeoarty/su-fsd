@@ -17,8 +17,7 @@ function customFileNameSortDesc(a, b) {
 }
 
 async function readTextFile(filePath) {
-  const absolutePath = path.join(process.cwd(), filePath);
-  const fileData = await fs.readFile(absolutePath, "utf8");
+  const fileData = await fs.readFile(filePath, "utf8");
 
   const result = fileData.trim().split("\n").map((line) => {
     const [createdAt, fileName] = line.split(";");
@@ -34,7 +33,7 @@ export async function GET(req) {
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const order = searchParams.get("order") || "asc";
     
-    let data = await readTextFile("/app/(data)/data.csv");
+    let data = await readTextFile("./app/(data)/data.csv");
 
     if (sortBy === "createdAt") {
       data.sort((a, b) => {
