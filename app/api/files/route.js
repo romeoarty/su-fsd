@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+
+async function readTextFile(filePath) {
+  const res = await fetch(filePath);
+  if (!res.ok) {
+    throw new Error("Failed to fetch the file.");
+  }
+
+  const fileData = await res.text();
+  const result = fileData.trim().split("\n").map((line) => {
+    const [createdAt, fileName] = line.split(";");
+    return { createdAt, fileName };
+  });
+
+  return result;
+}
 
 function customFileNameSortAsc(a, b) {
   const reg = /\d+/g;
@@ -16,24 +29,14 @@ function customFileNameSortDesc(a, b) {
   return nameB.localeCompare(nameA);
 }
 
-async function readTextFile(filePath) {
-  const fileData = await fs.readFile(filePath, "utf8");
-
-  const result = fileData.trim().split("\n").map((line) => {
-    const [createdAt, fileName] = line.split(";");
-    return { createdAt, fileName };
-  });
-
-  return result;
-}
-
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const order = searchParams.get("order") || "asc";
     
-    let data = await readTextFile("./app/(data)/data.csv");
+    // Fetch data from the public folder
+    let data = await readTextFile(`${process.env.NEXT_PUBLIC_BASE_URL}/data.csv`);
 
     if (sortBy === "createdAt") {
       data.sort((a, b) => {
